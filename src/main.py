@@ -4,7 +4,7 @@
 #system libraries
 import psycopg2
 
-#local modules
+#project modules
 import queries
 
 
@@ -35,14 +35,13 @@ class Database():
                 )
 
                 self.cursor = self.connection.cursor()
-
-                print ( "Database opened successfully" )
+                #print ( "Database opened successfully" )
 
 
         #execution of query to the database
         def query ( self, query ):
 
-                print ( 'query: ', query )
+                #print ( 'query: ', query )
 
                 self.cursor.execute ( query )
                 return self.cursor.fetchall()
@@ -61,7 +60,6 @@ def __main() -> None:
 
         else:
                 queries.queries ( qs )
-                
 
 
 if __name__ == '__main__':
