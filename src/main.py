@@ -3,6 +3,7 @@
 
 #system libraries
 import psycopg2
+from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
 #project modules
 import queries
@@ -33,7 +34,7 @@ class Database():
                         host="localhost", 
                         port="5432"
                 )
-
+                self.connection.set_isolation_level ( ISOLATION_LEVEL_AUTOCOMMIT )
                 self.cursor = self.connection.cursor()
                 #print ( "Database opened successfully" )
 
