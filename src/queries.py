@@ -39,6 +39,3 @@ def queries ( db ):
 
         except ( Exception, psycopg2.DatabaseError ) as error:
                 exit ( error )
-
-        else:
-                print ( '\n\nAll queries have been successfully executed!' )

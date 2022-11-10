@@ -9,6 +9,7 @@ from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 import queries
 
 
+#database operations
 class Database():
 
         #constructor
@@ -63,6 +64,8 @@ def __main() -> None:
 
         else:
                 queries.queries ( qs )
+        
+        print ( '\n\nENDMAIN: All queries have been successfully executed!' )
 
 
 if __name__ == '__main__':
