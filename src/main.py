@@ -40,12 +40,14 @@ class Database():
 
 
         #execution of query to the database
-        def query ( self, query ):
+        def query ( self, query, selection=False ):
 
                 #print ( 'query: ', query )
 
                 self.cursor.execute ( query )
-                return self.cursor.fetchall()
+
+                if selection:
+                        return self.cursor.fetchall()
 
 
 #main
