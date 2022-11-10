@@ -7,30 +7,35 @@ import psycopg2
 
 
 #drop table
-def __droptable ( db ) -> None:
-        query = "DROP TABLE IF EXISTS employee;"
+def __droptable ( db, tablename ) -> None:
+
+        query = f"DROP TABLE IF EXISTS {tablename};"
         db.query ( query )
 
 
 #create table (SQL)
 def __createtable ( db ) -> None:
 
-        with open ( './data/employee.sql', 'r' ) as file:
-                query = file.readlines()
-                
+        query = open ( './data/employee.sql', 'r' ).read()
         db.query ( query )
 
 
-#TODO: create table (CSV->SQL)
-#...
+#create table (CSV->SQL)
+def __createtablecsv ( db, tablename ) -> None:
+
+        pass
+        #db.query ( query )
 
 
+#various queries
 def queries ( db ):
 
+        tablename = 'employee'
+
         try:
-                pass
-                #__droptable ( db )
-                #__createtable ( db )
+                __droptable ( db, tablename )           #drop table if exists
+                __createtable ( db )                    #create table from data (SQL)
+                #__createtablecsv ( db, tablename )     #create table from data (CSV->SQL)
 
         except ( Exception, psycopg2.DatabaseError ) as error:
                 exit ( error )
