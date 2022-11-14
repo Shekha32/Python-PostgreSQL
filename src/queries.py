@@ -117,6 +117,14 @@ def __offset ( db, tablename, offset, limit ) -> None:
         pprint ( db.query ( query, selection=True ), width=200 )
 
 
+#fetch + limit
+def __fetch ( db, tablename, offset, fetch ) -> None:
+
+        query = f"SELECT * FROM {tablename} OFFSET {offset} FETCH FIRST {fetch} ROW ONLY;"
+        print ( '\n', query )
+        pprint ( db.query ( query, selection=True ), width=200 )
+
+
 #various queries
 def queries ( db ):
 
@@ -135,6 +143,7 @@ def queries ( db ):
                 __whereand ( db, tablename, columns=['gender', 'country'] )                             #where + and
                 __limit ( db, tablename, limit=12 )                                                     #limit
                 __offset ( db, tablename, offset=200, limit=5 )                                         #offset + limit
+                __fetch ( db, tablename, offset=300, fetch=10 )                                         #offset + fetch
 
 
         except ( Exception, psycopg2.DatabaseError ) as error:
