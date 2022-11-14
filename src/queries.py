@@ -57,6 +57,7 @@ def __createtablecsv ( db, tablename ) -> None:
 def __printtable ( db, tablename ) -> None:
 
         query = f"SELECT * FROM {tablename};"
+        print ( '\n', query )
         pprint ( db.query ( query, selection=True ), width=200 )
 
 
@@ -64,6 +65,7 @@ def __printtable ( db, tablename ) -> None:
 def __printcolumn ( db, tablename, column ) -> None:
 
         query = f"SELECT {column} FROM {tablename};"
+        print ( '\n', query )
         pprint ( db.query ( query, selection=True ), width=200 )
 
 
@@ -71,6 +73,7 @@ def __printcolumn ( db, tablename, column ) -> None:
 def __printcolumns ( db, tablename, columns ) -> None:
 
         query = f"SELECT {','.join ( columns )} FROM {tablename};"
+        print ( '\n', query )
         pprint ( db.query ( query, selection=True ), width=200 )
 
 
@@ -78,6 +81,7 @@ def __printcolumns ( db, tablename, columns ) -> None:
 def __orderby ( db, tablename, orderby, sort ) -> None:
 
         query = f"SELECT * FROM {tablename} ORDER BY {orderby} {sort};"
+        print ( '\n', query )
         pprint ( db.query ( query, selection=True ), width=200 )
 
 
@@ -85,6 +89,15 @@ def __orderby ( db, tablename, orderby, sort ) -> None:
 def __distinct ( db, tablename, column, sort ) -> None:
 
         query = f"SELECT DISTINCT {column} FROM {tablename} ORDER BY {column} {sort};"
+        print ( '\n', query )
+        pprint ( db.query ( query, selection=True ), width=200 )
+
+
+#where + and
+def __whereand ( db, tablename, columns ) -> None:
+
+        query = f"SELECT * FROM {tablename} WHERE {columns [ 0 ]}='Female' AND {columns [ 1 ]}='Brazil';"
+        print ( '\n', query )
         pprint ( db.query ( query, selection=True ), width=200 )
 
 
@@ -103,7 +116,7 @@ def queries ( db ):
                 __printcolumns ( db, tablename, columns=['first_name', 'last_name', 'title'] )          #print several columns
                 __orderby ( db, tablename, orderby='city', sort='DESC' )                                #print table order by {field} (ASC/DESC)
                 __distinct ( db, tablename, column='country', sort='ASC' )                              #distinct rows in column
-
+                __whereand ( db, tablename, columns=['gender', 'country'] )                             #where + and
 
         except ( Exception, psycopg2.DatabaseError ) as error:
                 exit ( error )
