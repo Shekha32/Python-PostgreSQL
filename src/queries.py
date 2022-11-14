@@ -75,9 +75,16 @@ def __printcolumns ( db, tablename, columns ) -> None:
 
 
 #print table order by {field} (ASC/DESC)
-def __orderby ( db, tablename, orderby, mode ) -> None:
+def __orderby ( db, tablename, orderby, sort ) -> None:
 
-        query = f"SELECT * FROM {tablename} ORDER BY {orderby} {mode};"
+        query = f"SELECT * FROM {tablename} ORDER BY {orderby} {sort};"
+        pprint ( db.query ( query, selection=True ), width=200 )
+
+
+#distinct rows in column
+def __distinct ( db, tablename, column, sort ) -> None:
+
+        query = f"SELECT DISTINCT {column} FROM {tablename} ORDER BY {column} {sort};"
         pprint ( db.query ( query, selection=True ), width=200 )
 
 
@@ -94,7 +101,8 @@ def queries ( db ):
                 #__printtable ( db, tablename )                                                         #print table
                 __printcolumn ( db, tablename, column='email' )                                         #print one column
                 __printcolumns ( db, tablename, columns=['first_name', 'last_name', 'title'] )          #print several columns
-                __orderby ( db, tablename, orderby='city', mode='DESC' )                                #print table order by {field} (ASC/DESC)
+                __orderby ( db, tablename, orderby='city', sort='DESC' )                                #print table order by {field} (ASC/DESC)
+                __distinct ( db, tablename, column='country', sort='ASC' )                              #distinct rows in column
 
 
         except ( Exception, psycopg2.DatabaseError ) as error:
