@@ -109,6 +109,14 @@ def __limit ( db, tablename, limit ) -> None:
         pprint ( db.query ( query, selection=True ), width=200 )
 
 
+#offset + limit
+def __offset ( db, tablename, offset, limit ) -> None:
+
+        query = f"SELECT * FROM {tablename} OFFSET {offset} LIMIT {limit};"
+        print ( '\n', query )
+        pprint ( db.query ( query, selection=True ), width=200 )
+
+
 #various queries
 def queries ( db ):
 
@@ -125,7 +133,9 @@ def queries ( db ):
                 __orderby ( db, tablename, orderby='city', sort='DESC' )                                #print table order by {field} (ASC/DESC)
                 __distinct ( db, tablename, column='country', sort='ASC' )                              #distinct rows in column
                 __whereand ( db, tablename, columns=['gender', 'country'] )                             #where + and
-                __limit  ( db, tablename, limit=12 )                                                    #limit
+                __limit ( db, tablename, limit=12 )                                                     #limit
+                __offset ( db, tablename, offset=200, limit=5 )                                         #offset + limit
+
 
         except ( Exception, psycopg2.DatabaseError ) as error:
                 exit ( error )
