@@ -74,6 +74,13 @@ def __printcolumns ( db, tablename, columns ) -> None:
         pprint ( db.query ( query, selection=True ), width=200 )
 
 
+#print table order by {field} (ASC/DESC)
+def __orderby ( db, tablename, orderby, mode ) -> None:
+
+        query = f"SELECT * FROM {tablename} ORDER BY {orderby} {mode};"
+        pprint ( db.query ( query, selection=True ), width=200 )
+
+
 #various queries
 def queries ( db ):
 
@@ -87,6 +94,7 @@ def queries ( db ):
                 #__printtable ( db, tablename )                                                         #print table
                 __printcolumn ( db, tablename, column='email' )                                         #print one column
                 __printcolumns ( db, tablename, columns=['first_name', 'last_name', 'title'] )          #print several columns
+                __orderby ( db, tablename, orderby='city', mode='DESC' )                                #print table order by {field} (ASC/DESC)
 
 
         except ( Exception, psycopg2.DatabaseError ) as error:
