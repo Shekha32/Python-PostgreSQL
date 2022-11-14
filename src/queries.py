@@ -36,7 +36,7 @@ def __createtablecsv ( db, tablename ) -> None:
 
         with open ( './data/employee.csv', 'r' ) as f:
                 lines = ""
-                fields = f.readline().rstrip ( '\n' )
+                fields = f.readline().rstrip ( '\n' )                   #read first line
 
                 while True:
                         line = f.readline().rstrip ( '\n' )
@@ -44,14 +44,12 @@ def __createtablecsv ( db, tablename ) -> None:
                         if not line:
                                 break
 
-                        # print ( line, type ( line ) )
-                        # #TODO: add quotes to all fields of each line
-                        # print ( line, type ( line ) )
-                        # exit ()
+                        line = line.split(',')                          #add quotes to all fields of each line
+                        line[1:] = [ "'" + field + "'" if field != '' and line.index ( field ) != 0 else 'null' for field in line[1:] ]
+                        line = ",".join ( line )
                         lines += f"insert into {tablename} ({fields}) values ({line});"
 
         query = head + lines
-        # pprint ( query, width=600 )
         db.query ( query )
 
 
@@ -69,9 +67,10 @@ def queries ( db ):
 
         try:
                 __droptable ( db, tablename )           #drop table if exists
-                # __createtable ( db )                    #create table from data (SQL)
-                __createtablecsv ( db, tablename )     #create table from data (CSV->SQL)
-                # __printtable ( db, tablename )          #print table
+                __createtable ( db )                    #create table from data (SQL)
+                __droptable ( db, tablename )           #drop table if exists
+                __createtablecsv ( db, tablename )      #create table from data (CSV->SQL)
+                #__printtable ( db, tablename )          #print table
 
         except ( Exception, psycopg2.DatabaseError ) as error:
                 exit ( error )
