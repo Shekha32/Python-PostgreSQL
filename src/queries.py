@@ -101,6 +101,14 @@ def __whereand ( db, tablename, columns ) -> None:
         pprint ( db.query ( query, selection=True ), width=200 )
 
 
+#where + conditions + order by
+def __conditions ( db, tablename, columns ) -> None:
+
+        query = f"SELECT * FROM {tablename} WHERE {columns [ 0 ]}='Female' AND ({columns [ 1 ]}='Poland' OR {columns [ 1 ]}='Germany') ORDER BY {columns [ 2 ]};"
+        print ( '\n', query )
+        pprint ( db.query ( query, selection=True ), width=200 )
+
+
 #limit
 def __limit ( db, tablename, limit ) -> None:
 
@@ -141,6 +149,7 @@ def queries ( db ):
                 __orderby ( db, tablename, orderby='city', sort='DESC' )                                #print table order by {field} (ASC/DESC)
                 __distinct ( db, tablename, column='country', sort='ASC' )                              #distinct rows in column
                 __whereand ( db, tablename, columns=['gender', 'country'] )                             #where + and
+                __conditions ( db, tablename, columns=['gender', 'country', 'first_name'] )             #where + conditions + order by
                 __limit ( db, tablename, limit=12 )                                                     #limit
                 __offset ( db, tablename, offset=200, limit=5 )                                         #offset + limit
                 __fetch ( db, tablename, offset=300, fetch=10 )                                         #offset + fetch
