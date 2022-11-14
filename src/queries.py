@@ -60,17 +60,25 @@ def __printtable ( db, tablename ) -> None:
         pprint ( db.query ( query, selection=True ), width=200 )
 
 
+#print table
+def __printcolumn ( db, tablename, column ) -> None:
+
+        query = f"SELECT {column} FROM {tablename};"
+        pprint ( db.query ( query, selection=True ), width=200 )
+
+
 #various queries
 def queries ( db ):
 
         tablename = 'employee'
 
         try:
-                __droptable ( db, tablename )           #drop table if exists
-                __createtable ( db )                    #create table from data (SQL)
-                __droptable ( db, tablename )           #drop table if exists
-                __createtablecsv ( db, tablename )      #create table from data (CSV->SQL)
-                #__printtable ( db, tablename )          #print table
+                __droptable ( db, tablename )                           #drop table if exists
+                __createtable ( db )                                    #create table from data (SQL)
+                __droptable ( db, tablename )                           #drop table if exists
+                __createtablecsv ( db, tablename )                      #create table from data (CSV->SQL)
+                #__printtable ( db, tablename )                         #print table
+                __printcolumn ( db, tablename, column='email' )         #print one column
 
         except ( Exception, psycopg2.DatabaseError ) as error:
                 exit ( error )
