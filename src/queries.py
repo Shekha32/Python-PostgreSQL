@@ -149,6 +149,14 @@ def __wherebetween ( db, tablename, field ) -> None:
         pprint ( db.query ( query, selection=True ), width=200 )
 
 
+#where + like
+def __wherelike ( db, tablename, field ) -> None:
+
+        query = f"SELECT * FROM {tablename} WHERE {field} LIKE '%@google.%';"
+        print ( '\n', query )
+        pprint ( db.query ( query, selection=True ), width=200 )
+
+
 #various queries
 def queries ( db ):
 
@@ -171,6 +179,7 @@ def queries ( db ):
                 __fetch ( db, tablename, offset=300, fetch=10 )                                         #offset + fetch
                 __wherein ( db, tablename, field='country' )                                            #where + in
                 __wherebetween ( db, tablename, field='date_of_birth' )                                 #where + between
+                __wherelike ( db, tablename, field='email' )                                            #where + like
 
 
         except ( Exception, psycopg2.DatabaseError ) as error:
