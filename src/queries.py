@@ -188,6 +188,13 @@ def __as ( db, tablename, fields ) -> None:
         pprint ( db.query ( query, selection=True ), width=200 )  
 
 
+#coalesce + order by
+def __coalesce ( db, tablename, field ) -> None:
+
+        query = f"SELECT COALESCE({field}, 'not applicable') FROM employee ORDER BY email;"
+        print ( '\n', query )
+        pprint ( db.query ( query, selection=True ), width=200 ) 
+
 #various queries
 def queries ( db ):
 
@@ -215,6 +222,7 @@ def queries ( db ):
                 __countgroupby ( db, tablename, field='country' )                                       #count + group by
                 __countgroupbyhaving ( db, tablename, field='country' )                                 #count + group by + having + order by
                 __as ( db, tablename, fields=['first_name', 'last_name', 'gender'] )                    #as
+                __coalesce ( db, tablename, field='email' )                                             #coalesce + order by
 
 
 
