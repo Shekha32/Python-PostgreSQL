@@ -165,6 +165,14 @@ def __countgroupby ( db, tablename, field ) -> None:
         pprint ( db.query ( query, selection=True ), width=200 )
 
 
+#count + group by + having + order by
+def __countgroupbyhaving ( db, tablename, field ) -> None:
+
+        query = f"SELECT {field}, COUNT(*) FROM {tablename} GROUP BY {field} HAVING COUNT(*) > 8 ORDER BY COUNT(*);"
+        print ( '\n', query )
+        pprint ( db.query ( query, selection=True ), width=200 )
+
+
 #various queries
 def queries ( db ):
 
@@ -189,6 +197,7 @@ def queries ( db ):
                 __wherebetween ( db, tablename, field='date_of_birth' )                                 #where + between
                 __wherelike ( db, tablename, field='email' )                                            #where + like
                 __countgroupby ( db, tablename, field='country' )                                       #count + group by
+                __countgroupbyhaving ( db, tablename, field='country' )                                 #count + group by + having + order by
 
 
         except ( Exception, psycopg2.DatabaseError ) as error:
