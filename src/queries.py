@@ -61,8 +61,15 @@ def __printtable ( db, tablename ) -> None:
         pprint ( db.query ( query, selection=True ), width=200 )
 
 
+#print table column names
+def __printcolumns ( db, tablename ) -> None:
+
+        query = f"SELECT column_name, data_type FROM information_schema.columns WHERE table_name = '{tablename}';"
+        print ( '\n', query )
+        pprint ( db.query ( query, selection=True ), width=200 )
+
 #print one column
-def __printcolumn ( db, tablename, column ) -> None:
+def __column ( db, tablename, column ) -> None:
 
         query = f"SELECT {column} FROM {tablename};"
         print ( '\n', query )
@@ -70,7 +77,7 @@ def __printcolumn ( db, tablename, column ) -> None:
 
 
 #print several columns
-def __printcolumns ( db, tablename, columns ) -> None:
+def __columns ( db, tablename, columns ) -> None:
 
         query = f"SELECT {','.join ( columns )} FROM {tablename};"
         print ( '\n', query )
@@ -184,8 +191,9 @@ def queries ( db ):
                 __droptable ( db, tablename )                                                           #drop table if exists
                 __createtablecsv ( db, tablename )                                                      #create table from data (CSV->SQL)
                 __printtable ( db, tablename )                                                          #print table
-                __printcolumn ( db, tablename, column='email' )                                         #print one column
-                __printcolumns ( db, tablename, columns=['first_name', 'last_name', 'title'] )          #print several columns
+                __printcolumns ( db, tablename )                                                        #print table column names
+                __column ( db, tablename, column='email' )                                              #print one column
+                __columns ( db, tablename, columns=['first_name', 'last_name', 'title'] )               #print several columns
                 __orderby ( db, tablename, orderby='city', sort='DESC' )                                #print table order by {field} (ASC/DESC)
                 __distinct ( db, tablename, column='country', sort='ASC' )                              #distinct rows in column
                 __whereand ( db, tablename, columns=['gender', 'country'] )                             #where + and
