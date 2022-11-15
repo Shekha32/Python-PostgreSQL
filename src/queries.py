@@ -133,6 +133,14 @@ def __fetch ( db, tablename, offset, fetch ) -> None:
         pprint ( db.query ( query, selection=True ), width=200 )
 
 
+#where + in
+def __wherein ( db, tablename, field ) -> None:
+
+        query = f"SELECT * FROM {tablename} WHERE {field} IN ('Canada', 'Peru', 'Israel');"
+        print ( '\n', query )
+        pprint ( db.query ( query, selection=True ), width=200 )
+
+
 #various queries
 def queries ( db ):
 
@@ -153,6 +161,7 @@ def queries ( db ):
                 __limit ( db, tablename, limit=12 )                                                     #limit
                 __offset ( db, tablename, offset=200, limit=5 )                                         #offset + limit
                 __fetch ( db, tablename, offset=300, fetch=10 )                                         #offset + fetch
+                __wherein ( db, tablename, field='country' )                                            #wherein
 
 
         except ( Exception, psycopg2.DatabaseError ) as error:
