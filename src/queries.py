@@ -157,6 +157,14 @@ def __wherelike ( db, tablename, field ) -> None:
         pprint ( db.query ( query, selection=True ), width=200 )
 
 
+#count + group by
+def __countgroupby ( db, tablename, field ) -> None:
+
+        query = f"SELECT {field}, COUNT(*) FROM {tablename} GROUP BY {field};"
+        print ( '\n', query )
+        pprint ( db.query ( query, selection=True ), width=200 )
+
+
 #various queries
 def queries ( db ):
 
@@ -180,6 +188,7 @@ def queries ( db ):
                 __wherein ( db, tablename, field='country' )                                            #where + in
                 __wherebetween ( db, tablename, field='date_of_birth' )                                 #where + between
                 __wherelike ( db, tablename, field='email' )                                            #where + like
+                __countgroupby ( db, tablename, field='country' )                                       #count + group by
 
 
         except ( Exception, psycopg2.DatabaseError ) as error:
