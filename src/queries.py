@@ -180,6 +180,14 @@ def __countgroupbyhaving ( db, tablename, field ) -> None:
         pprint ( db.query ( query, selection=True ), width=200 )
 
 
+#as
+def __as ( db, tablename, fields ) -> None:
+
+        query = f"SELECT id, {fields [ 0 ]} AS name, {fields [ 1 ]} AS surname, country, {fields [ 2 ]} AS sex FROM employee;"
+        print ( '\n', query )
+        pprint ( db.query ( query, selection=True ), width=200 )  
+
+
 #various queries
 def queries ( db ):
 
@@ -206,6 +214,8 @@ def queries ( db ):
                 __wherelike ( db, tablename, field='email' )                                            #where + like
                 __countgroupby ( db, tablename, field='country' )                                       #count + group by
                 __countgroupbyhaving ( db, tablename, field='country' )                                 #count + group by + having + order by
+                __as ( db, tablename, fields=['first_name', 'last_name', 'gender'] )                    #as
+
 
 
         except ( Exception, psycopg2.DatabaseError ) as error:
