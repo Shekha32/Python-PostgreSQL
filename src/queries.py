@@ -141,6 +141,14 @@ def __wherein ( db, tablename, field ) -> None:
         pprint ( db.query ( query, selection=True ), width=200 )
 
 
+#where + between
+def __wherebetween ( db, tablename, field ) -> None:
+
+        query = f"SELECT * FROM {tablename} WHERE {field} BETWEEN '1990-01-01' AND '1992-01-01';"
+        print ( '\n', query )
+        pprint ( db.query ( query, selection=True ), width=200 )
+
+
 #various queries
 def queries ( db ):
 
@@ -161,7 +169,8 @@ def queries ( db ):
                 __limit ( db, tablename, limit=12 )                                                     #limit
                 __offset ( db, tablename, offset=200, limit=5 )                                         #offset + limit
                 __fetch ( db, tablename, offset=300, fetch=10 )                                         #offset + fetch
-                __wherein ( db, tablename, field='country' )                                            #wherein
+                __wherein ( db, tablename, field='country' )                                            #where + in
+                __wherebetween ( db, tablename, field='date_of_birth' )                                 #where + between
 
 
         except ( Exception, psycopg2.DatabaseError ) as error:
