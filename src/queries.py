@@ -196,6 +196,14 @@ def __coalesce ( db, tablename, field ) -> None:
         pprint ( db.query ( query, selection=True ), width=200 ) 
 
 
+#min, max
+def __minmax ( db, tablename, field, operation ) -> None:
+
+        query = f"SELECT {operation}({field}) FROM {tablename};"
+        print ( '\n', query )
+        pprint ( db.query ( query, selection=True ), width=200 ) 
+
+
 #various queries
 def queries ( db ):
 
@@ -227,7 +235,8 @@ def queries ( db ):
                 tablename = 'holiday'
                 __droptable ( db, tablename )                                                           #drop table if exists
                 __createtable ( db, tablename )                                                         #create table from data (SQL)
-                __printtable ( db, tablename )
+                __printtable ( db, tablename )                                                          #create table from data (SQL)
+                __minmax ( db, tablename, field='price', operation='max' )                              #min, max
 
         except ( Exception, psycopg2.DatabaseError ) as error:
                 exit ( error )
