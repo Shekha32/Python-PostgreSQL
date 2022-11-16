@@ -204,6 +204,14 @@ def __minmax ( db, tablename, field, operation ) -> None:
         pprint ( db.query ( query, selection=True ), width=200 ) 
 
 
+#round + average
+def __roundavg ( db, tablename, field ) -> None:
+
+        query = f"SELECT ROUND(AVG({field})) FROM {tablename};"
+        print ( '\n', query )
+        pprint ( db.query ( query, selection=True ), width=200 ) 
+
+
 #various queries
 def queries ( db ):
 
@@ -237,6 +245,7 @@ def queries ( db ):
                 __createtable ( db, tablename )                                                         #create table from data (SQL)
                 __printtable ( db, tablename )                                                          #create table from data (SQL)
                 __minmax ( db, tablename, field='price', operation='max' )                              #min, max
+                __roundavg ( db, tablename, field='price' )                                             #round + average
 
         except ( Exception, psycopg2.DatabaseError ) as error:
                 exit ( error )
