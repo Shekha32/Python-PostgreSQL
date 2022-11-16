@@ -7,21 +7,21 @@ from pprint import pprint
 
 
 #drop table
-def __droptable ( db, tablename ) -> None:
+def __drop_table ( db, tablename ) -> None:
 
         query = f"DROP TABLE IF EXISTS {tablename};"
         db.query ( query )
 
 
 #create table from data (SQL)
-def __createtable ( db, tablename ) -> None:
+def __create_table ( db, tablename ) -> None:
 
         query = open ( f'./data/{tablename}.sql', 'r' ).read()
         db.query ( query )
 
 
 #create table from data (CSV->SQL)
-def __createtablecsv ( db, tablename ) -> None:
+def __create_table_csv ( db, tablename ) -> None:
 
         head = f"CREATE TABLE {tablename} ( " + \
                 "id BIGSERIAL NOT NULL PRIMARY KEY, " + \
@@ -54,7 +54,7 @@ def __createtablecsv ( db, tablename ) -> None:
 
 
 #print table
-def __printtable ( db, tablename ) -> None:
+def __print_table ( db, tablename ) -> None:
 
         query = f"SELECT * FROM {tablename};"
         print ( '\n', query )
@@ -62,7 +62,7 @@ def __printtable ( db, tablename ) -> None:
 
 
 #print table column names
-def __printcolumns ( db, tablename ) -> None:
+def __print_columns ( db, tablename ) -> None:
 
         query = f"SELECT column_name, data_type FROM information_schema.columns WHERE table_name = '{tablename}';"
         print ( '\n', query )
@@ -101,7 +101,7 @@ def __distinct ( db, tablename, column, sort ) -> None:
 
 
 #where + and
-def __whereand ( db, tablename, columns ) -> None:
+def __where_and ( db, tablename, columns ) -> None:
 
         query = f"SELECT * FROM {tablename} WHERE {columns [ 0 ]}='Female' AND {columns [ 1 ]}='Brazil';"
         print ( '\n', query )
@@ -141,7 +141,7 @@ def __fetch ( db, tablename, offset, fetch ) -> None:
 
 
 #where + in
-def __wherein ( db, tablename, field ) -> None:
+def __where_in ( db, tablename, field ) -> None:
 
         query = f"SELECT * FROM {tablename} WHERE {field} IN ('Canada', 'Peru', 'Israel');"
         print ( '\n', query )
@@ -149,7 +149,7 @@ def __wherein ( db, tablename, field ) -> None:
 
 
 #where + between
-def __wherebetween ( db, tablename, field ) -> None:
+def __where_between ( db, tablename, field ) -> None:
 
         query = f"SELECT * FROM {tablename} WHERE {field} BETWEEN '1990-01-01' AND '1992-01-01';"
         print ( '\n', query )
@@ -157,7 +157,7 @@ def __wherebetween ( db, tablename, field ) -> None:
 
 
 #where + like
-def __wherelike ( db, tablename, field ) -> None:
+def __where_like ( db, tablename, field ) -> None:
 
         query = f"SELECT * FROM {tablename} WHERE {field} LIKE '%@google.%';"
         print ( '\n', query )
@@ -165,7 +165,7 @@ def __wherelike ( db, tablename, field ) -> None:
 
 
 #count + group by
-def __countgroupby ( db, tablename, field ) -> None:
+def __count_groupby ( db, tablename, field ) -> None:
 
         query = f"SELECT {field}, COUNT(*) FROM {tablename} GROUP BY {field};"
         print ( '\n', query )
@@ -173,7 +173,7 @@ def __countgroupby ( db, tablename, field ) -> None:
 
 
 #count + group by + having + order by
-def __countgroupbyhaving ( db, tablename, field ) -> None:
+def __count_groupby_having ( db, tablename, field ) -> None:
 
         query = f"SELECT {field}, COUNT(*) FROM {tablename} GROUP BY {field} HAVING COUNT(*) > 8 ORDER BY COUNT(*);"
         print ( '\n', query )
@@ -197,7 +197,7 @@ def __coalesce ( db, tablename, field ) -> None:
 
 
 #min, max
-def __minmax ( db, tablename, field, operation ) -> None:
+def __min_max ( db, tablename, field, operation ) -> None:
 
         query = f"SELECT {operation}({field}) FROM {tablename};"
         print ( '\n', query )
@@ -205,7 +205,7 @@ def __minmax ( db, tablename, field, operation ) -> None:
 
 
 #round + average
-def __roundavg ( db, tablename, field ) -> None:
+def __round_avg ( db, tablename, field ) -> None:
 
         query = f"SELECT ROUND(AVG({field})) FROM {tablename};"
         print ( '\n', query )
@@ -213,7 +213,7 @@ def __roundavg ( db, tablename, field ) -> None:
 
 
 #min + group by | note: most cheap tickets in countries
-def __mingroupby ( db, tablename, fields ) -> None:
+def __min_groupby ( db, tablename, fields ) -> None:
 
         query = f"SELECT {fields [ 0 ]}, MIN({fields [ 1 ]}) FROM {tablename} GROUP BY {fields [ 0 ]};"
         print ( '\n', query )
@@ -221,7 +221,7 @@ def __mingroupby ( db, tablename, fields ) -> None:
 
 
 #sum + group by | note: amount of tickets to countries
-def __sumgroupby ( db, tablename, fields ) -> None:
+def __sum_groupby ( db, tablename, fields ) -> None:
 
         query = f"SELECT {fields [ 0 ]}, SUM({fields [ 1 ]}) FROM {tablename} GROUP BY {fields [ 0 ]};"
         print ( '\n', query )
@@ -233,37 +233,37 @@ def queries ( db ):
 
         tablename = 'employee'
 
-        try:                                                                                            #TODO: add notes
-                __droptable ( db, tablename )                                                           #drop table if exists
-                __createtable ( db, tablename )                                                         #create table from data (SQL)
-                __droptable ( db, tablename )                                                           #drop table if exists
-                __createtablecsv ( db, tablename )                                                      #create table from data (CSV->SQL)
-                __printtable ( db, tablename )                                                          #print table
-                __printcolumns ( db, tablename )                                                        #print table column names
-                __column ( db, tablename, column='email' )                                              #print one column
-                __columns ( db, tablename, columns=['first_name', 'last_name', 'title'] )               #print several columns
-                __orderby ( db, tablename, orderby='city', sort='DESC' )                                #print table order by {field} (ASC/DESC)
-                __distinct ( db, tablename, column='country', sort='ASC' )                              #distinct rows in column
-                __whereand ( db, tablename, columns=['gender', 'country'] )                             #where + and
-                __conditions ( db, tablename, columns=['gender', 'country', 'first_name'] )             #where + conditions + order by
-                __limit ( db, tablename, limit=12 )                                                     #limit
-                __offset ( db, tablename, offset=200, limit=5 )                                         #offset + limit
-                __fetch ( db, tablename, offset=300, fetch=10 )                                         #offset + fetch
-                __wherein ( db, tablename, field='country' )                                            #where + in
-                __wherebetween ( db, tablename, field='date_of_birth' )                                 #where + between
-                __wherelike ( db, tablename, field='email' )                                            #where + like
-                __countgroupby ( db, tablename, field='country' )                                       #count + group by
-                __countgroupbyhaving ( db, tablename, field='country' )                                 #count + group by + having + order by
-                __as ( db, tablename, fields=['first_name', 'last_name', 'gender'] )                    #as
-                __coalesce ( db, tablename, field='email' )                                             #coalesce + order by
+        try:                                                                                    #TODO: add notes
+                __drop_table ( db, tablename )                                                  #drop table if exists
+                __create_table ( db, tablename )                                                #create table from data (SQL)
+                __drop_table ( db, tablename )                                                  #drop table if exists
+                __create_table_csv ( db, tablename )                                            #create table from data (CSV->SQL)
+                __print_table ( db, tablename )                                                 #print table
+                __print_columns ( db, tablename )                                               #print table column names
+                __column ( db, tablename, column='email' )                                      #print one column
+                __columns ( db, tablename, columns=['first_name', 'last_name', 'title'] )       #print several columns
+                __orderby ( db, tablename, orderby='city', sort='DESC' )                        #print table order by {field} (ASC/DESC)
+                __distinct ( db, tablename, column='country', sort='ASC' )                      #distinct rows in column
+                __where_and ( db, tablename, columns=['gender', 'country'] )                    #where + and
+                __conditions ( db, tablename, columns=['gender', 'country', 'first_name'] )     #where + conditions + order by
+                __limit ( db, tablename, limit=12 )                                             #limit
+                __offset ( db, tablename, offset=200, limit=5 )                                 #offset + limit
+                __fetch ( db, tablename, offset=300, fetch=10 )                                 #offset + fetch
+                __where_in ( db, tablename, field='country' )                                   #where + in
+                __where_between ( db, tablename, field='date_of_birth' )                        #where + between
+                __where_like ( db, tablename, field='email' )                                   #where + like
+                __count_groupby ( db, tablename, field='country' )                              #count + group by
+                __count_groupby_having ( db, tablename, field='country' )                       #count + group by + having + order by
+                __as ( db, tablename, fields=['first_name', 'last_name', 'gender'] )            #as
+                __coalesce ( db, tablename, field='email' )                                     #coalesce + order by
                 tablename = 'holiday'
-                __droptable ( db, tablename )                                                           #drop table if exists
-                __createtable ( db, tablename )                                                         #create table from data (SQL)
-                __printtable ( db, tablename )                                                          #create table from data (SQL)
-                __minmax ( db, tablename, field='price', operation='max' )                              #min, max
-                __roundavg ( db, tablename, field='price' )                                             #round + average
-                __mingroupby ( db, tablename, fields=['destination_country', 'price'] )                 #min + group by | note: most cheap tickets in countries
-                __sumgroupby ( db, tablename, fields=['destination_country', 'price'] )                 #sum + group by | note: amount of tickets to countries
+                __drop_table ( db, tablename )                                                  #drop table if exists
+                __create_table ( db, tablename )                                                #create table from data (SQL)
+                __print_table ( db, tablename )                                                 #create table from data (SQL)
+                __min_max ( db, tablename, field='price', operation='max' )                     #min, max
+                __round_avg ( db, tablename, field='price' )                                    #round + average
+                __min_groupby ( db, tablename, fields=['destination_country', 'price'] )        #min + group by | note: most cheap tickets in countries
+                __sum_groupby ( db, tablename, fields=['destination_country', 'price'] )        #sum + group by | note: amount of tickets to countries
 
         except ( Exception, psycopg2.DatabaseError ) as error:
                 exit ( error )
