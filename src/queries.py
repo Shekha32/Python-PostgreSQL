@@ -14,9 +14,9 @@ def __droptable ( db, tablename ) -> None:
 
 
 #create table from data (SQL)
-def __createtable ( db ) -> None:
+def __createtable ( db, tablename ) -> None:
 
-        query = open ( './data/employee.sql', 'r' ).read()
+        query = open ( f'./data/{tablename}.sql', 'r' ).read()
         db.query ( query )
 
 
@@ -195,6 +195,7 @@ def __coalesce ( db, tablename, field ) -> None:
         print ( '\n', query )
         pprint ( db.query ( query, selection=True ), width=200 ) 
 
+
 #various queries
 def queries ( db ):
 
@@ -202,7 +203,7 @@ def queries ( db ):
 
         try:
                 __droptable ( db, tablename )                                                           #drop table if exists
-                __createtable ( db )                                                                    #create table from data (SQL)
+                __createtable ( db, tablename )                                                         #create table from data (SQL)
                 __droptable ( db, tablename )                                                           #drop table if exists
                 __createtablecsv ( db, tablename )                                                      #create table from data (CSV->SQL)
                 __printtable ( db, tablename )                                                          #print table
@@ -223,8 +224,10 @@ def queries ( db ):
                 __countgroupbyhaving ( db, tablename, field='country' )                                 #count + group by + having + order by
                 __as ( db, tablename, fields=['first_name', 'last_name', 'gender'] )                    #as
                 __coalesce ( db, tablename, field='email' )                                             #coalesce + order by
-
-
+                tablename = 'holiday'
+                __droptable ( db, tablename )                                                           #drop table if exists
+                __createtable ( db, tablename )                                                         #create table from data (SQL)
+                __printtable ( db, tablename )
 
         except ( Exception, psycopg2.DatabaseError ) as error:
                 exit ( error )
