@@ -212,10 +212,18 @@ def __roundavg ( db, tablename, field ) -> None:
         pprint ( db.query ( query, selection=True ), width=200 ) 
 
 
-#min + group by note: most cheap tickets in countries
+#min + group by | note: most cheap tickets in countries
 def __mingroupby ( db, tablename, fields ) -> None:
 
         query = f"SELECT {fields [ 0 ]}, MIN({fields [ 1 ]}) FROM {tablename} GROUP BY {fields [ 0 ]};"
+        print ( '\n', query )
+        pprint ( db.query ( query, selection=True ), width=200 ) 
+
+
+#sum + group by | note: amount of tickets to countries
+def __sumgroupby ( db, tablename, fields ) -> None:
+
+        query = f"SELECT {fields [ 0 ]}, SUM({fields [ 1 ]}) FROM {tablename} GROUP BY {fields [ 0 ]};"
         print ( '\n', query )
         pprint ( db.query ( query, selection=True ), width=200 ) 
 
@@ -225,7 +233,7 @@ def queries ( db ):
 
         tablename = 'employee'
 
-        try:
+        try:                                                                                            #TODO: add notes
                 __droptable ( db, tablename )                                                           #drop table if exists
                 __createtable ( db, tablename )                                                         #create table from data (SQL)
                 __droptable ( db, tablename )                                                           #drop table if exists
@@ -254,7 +262,8 @@ def queries ( db ):
                 __printtable ( db, tablename )                                                          #create table from data (SQL)
                 __minmax ( db, tablename, field='price', operation='max' )                              #min, max
                 __roundavg ( db, tablename, field='price' )                                             #round + average
-                __mingroupby ( db, tablename, fields=['destination_country', 'price'] )                 #min + group by note: most cheap tickets in countries
+                __mingroupby ( db, tablename, fields=['destination_country', 'price'] )                 #min + group by | note: most cheap tickets in countries
+                __sumgroupby ( db, tablename, fields=['destination_country', 'price'] )                 #sum + group by | note: amount of tickets to countries
 
         except ( Exception, psycopg2.DatabaseError ) as error:
                 exit ( error )
