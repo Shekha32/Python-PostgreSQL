@@ -237,6 +237,14 @@ def __age_now_as ( db, tablename, field ) -> None:
         pprint ( db.query ( query, selection=True ), width=200 ) 
 
 
+#UPDATE + SET + WHERE | note: update {id} row
+def __update_set ( db, tablename, id ) -> None:
+
+        query = f"UPDATE {tablename} SET first_name = 'Alex', last_name = 'Shekha', email = 'le.shekha@mail.com' WHERE id = {id};"
+        print ( '\n', query )
+        pprint ( db.query ( query ), width=200 ) 
+
+
 #MIN, MAX | note: MIN/MAX price of tickets
 def __min_max ( db, tablename, field, operation ) -> None:
 
@@ -302,6 +310,7 @@ def queries ( db ):
                 __as ( db, tablename, fields=['first_name', 'last_name', 'gender'] )            #AS | note: change headers
                 __coalesce ( db, tablename, field='email', msg='not applicable' )               #COALESCE + ORDER BY | note: replace null by {msg}
                 __age_now_as ( db, tablename, field='date_of_birth' )                           #AGE + NOW + AS | note: age of employees
+                __update_set ( db, tablename, id=1 )                                            #UPDATE + SET + WHERE | note: update {id} row
                 tablename = 'holiday'
                 __drop_table ( db, tablename )                                                  #DROP TABLE IF EXISTS
                 __create_table ( db, tablename )                                                #CREATE TABLE FROM data (SQL)
@@ -310,6 +319,7 @@ def queries ( db ):
                 __round_avg ( db, tablename, field='price' )                                    #ROUND + AVERAGE | note: round {field}
                 __min_groupby ( db, tablename, fields=['destination_country', 'price'] )        #MIN + GROUP BY | note: most cheap tickets in countries
                 __sum_groupby ( db, tablename, fields=['destination_country', 'price'] )        #SUM + GROUP BY | note: amount of tickets to countries
+                #TODO: add cars.sql to data. constraint: car make
 
         except ( Exception, psycopg2.DatabaseError ) as error:
                 exit ( error )
