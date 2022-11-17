@@ -53,6 +53,14 @@ def __create_table_csv ( db, tablename ) -> None:
         db.query ( query )
 
 
+#remove primary key
+def __remove_primary_key ( db, tablename ) -> None:
+
+        query = f"ALTER TABLE {tablename} DROP CONSTRAINT {tablename}_pkey"
+        print ( '\n', query )
+        db.query ( query )
+
+
 #print table
 def __print_table ( db, tablename ) -> None:
 
@@ -246,6 +254,7 @@ def queries ( db ):
                 __create_table ( db, tablename )                                                #create table from data (SQL)
                 __drop_table ( db, tablename )                                                  #drop table if exists
                 __create_table_csv ( db, tablename )                                            #create table from data (CSV->SQL)
+                __remove_primary_key ( db, tablename )                                          #remove primary key
                 __print_table ( db, tablename )                                                 #print table
                 __print_columns ( db, tablename )                                               #print table column names
                 __column ( db, tablename, column='email' )                                      #print one column
