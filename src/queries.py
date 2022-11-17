@@ -61,6 +61,24 @@ def __delete_row ( db, tablename, id ) -> None:
         db.query ( query )
 
 
+#UPDATE + SET + WHERE | note: update {id} row
+def __update_set ( db, tablename, id ) -> None:
+
+        query = f"UPDATE {tablename} SET first_name = 'Alex', last_name = 'Shekha', email = 'le.shekha@mail.com' WHERE id = {id};"
+        print ( '\n', query )
+        pprint ( db.query ( query ), width=200 ) 
+
+
+#INSERT row + CONFLICT handling
+def __conflict ( db, tablename ) -> None:
+
+        query = f"INSERT INTO {tablename} (id, first_name, last_name, date_of_birth, gender, city, country, title) " + \
+                "VALUES (1, 'Le', 'Shekha', '2003-03-04', 'Male', 'Oslo', 'Croatia', 'Backend Developer') " + \
+                "ON CONFLICT (id) DO NOTHING"
+        print ( '\n', query )
+        pprint ( db.query ( query ), width=200 ) 
+
+
 #ALTER TABLE - remove PRIMARY KEY
 def __remove_primary_key ( db, tablename ) -> None:
 
@@ -237,14 +255,6 @@ def __age_now_as ( db, tablename, field ) -> None:
         pprint ( db.query ( query, selection=True ), width=200 ) 
 
 
-#UPDATE + SET + WHERE | note: update {id} row
-def __update_set ( db, tablename, id ) -> None:
-
-        query = f"UPDATE {tablename} SET first_name = 'Alex', last_name = 'Shekha', email = 'le.shekha@mail.com' WHERE id = {id};"
-        print ( '\n', query )
-        pprint ( db.query ( query ), width=200 ) 
-
-
 #MIN, MAX | note: MIN/MAX price of tickets
 def __min_max ( db, tablename, field, operation ) -> None:
 
@@ -288,6 +298,8 @@ def queries ( db ):
                 __drop_table ( db, tablename )                                                  #DROP TABLE IF EXISTS
                 __create_table_csv ( db, tablename )                                            #CREATE TABLE FROM data (CSV->SQL)
                 __delete_row ( db, tablename, id='500' )                                        #DELETE row
+                __update_set ( db, tablename, id=1 )                                            #UPDATE + SET + WHERE | note: update {id} row
+                __conflict ( db, tablename )                                                    #INSERT row + CONFLICT handling
                 __remove_primary_key ( db, tablename )                                          #ALTER TABLE - remove PRIMARY KEY
                 __add_primary_key ( db, tablename, field='id' )                                 #ADD PRIMARY KEY
                 __unique_field ( db, tablename, field='email' )                                 #ALTER TABLE - ADD unique field
@@ -310,7 +322,6 @@ def queries ( db ):
                 __as ( db, tablename, fields=['first_name', 'last_name', 'gender'] )            #AS | note: change headers
                 __coalesce ( db, tablename, field='email', msg='not applicable' )               #COALESCE + ORDER BY | note: replace null by {msg}
                 __age_now_as ( db, tablename, field='date_of_birth' )                           #AGE + NOW + AS | note: age of employees
-                __update_set ( db, tablename, id=1 )                                            #UPDATE + SET + WHERE | note: update {id} row
                 tablename = 'holiday'
                 __drop_table ( db, tablename )                                                  #DROP TABLE IF EXISTS
                 __create_table ( db, tablename )                                                #CREATE TABLE FROM data (SQL)
