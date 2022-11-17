@@ -53,10 +53,18 @@ def __create_table_csv ( db, tablename ) -> None:
         db.query ( query )
 
 
+#delete row
+def __delete_row ( db, tablename, id ) -> None:
+
+        query = f"DELETE FROM {tablename} WHERE id={id};"
+        print ( '\n', query )
+        db.query ( query )
+
+
 #remove primary key
 def __remove_primary_key ( db, tablename ) -> None:
 
-        query = f"ALTER TABLE {tablename} DROP CONSTRAINT {tablename}_pkey"
+        query = f"ALTER TABLE {tablename} DROP CONSTRAINT {tablename}_pkey;"
         print ( '\n', query )
         db.query ( query )
 
@@ -64,7 +72,7 @@ def __remove_primary_key ( db, tablename ) -> None:
 #add primary key
 def __add_primary_key ( db, tablename, field ) -> None:
 
-        query = f"ALTER TABLE {tablename} ADD PRIMARY KEY({field})"
+        query = f"ALTER TABLE {tablename} ADD PRIMARY KEY({field});"
         print ( '\n', query )
         db.query ( query )
 
@@ -262,6 +270,7 @@ def queries ( db ):
                 __create_table ( db, tablename )                                                #create table from data (SQL)
                 __drop_table ( db, tablename )                                                  #drop table if exists
                 __create_table_csv ( db, tablename )                                            #create table from data (CSV->SQL)
+                __delete_row ( db, tablename, id='500' )                                        #delete row
                 __remove_primary_key ( db, tablename )                                          #remove primary key
                 __add_primary_key ( db, tablename, field='id' )                                 #add primary key
                 __print_table ( db, tablename )                                                 #print table
