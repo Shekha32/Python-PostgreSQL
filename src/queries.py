@@ -61,6 +61,14 @@ def __remove_primary_key ( db, tablename ) -> None:
         db.query ( query )
 
 
+#add primary key
+def __add_primary_key ( db, tablename, field ) -> None:
+
+        query = f"ALTER TABLE {tablename} ADD PRIMARY KEY({field})"
+        print ( '\n', query )
+        db.query ( query )
+
+
 #print table
 def __print_table ( db, tablename ) -> None:
 
@@ -255,6 +263,7 @@ def queries ( db ):
                 __drop_table ( db, tablename )                                                  #drop table if exists
                 __create_table_csv ( db, tablename )                                            #create table from data (CSV->SQL)
                 __remove_primary_key ( db, tablename )                                          #remove primary key
+                __add_primary_key ( db, tablename, field='id' )                                 #add primary key
                 __print_table ( db, tablename )                                                 #print table
                 __print_columns ( db, tablename )                                               #print table column names
                 __column ( db, tablename, column='email' )                                      #print one column
