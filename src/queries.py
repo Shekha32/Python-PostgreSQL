@@ -73,8 +73,10 @@ def __update_set ( db, tablename, id ) -> None:
 def __conflict ( db, tablename ) -> None:
 
         query = f"INSERT INTO {tablename} (id, first_name, last_name, date_of_birth, gender, city, country, title) " + \
-                "VALUES (1, 'Le', 'Shekha', '2003-03-04', 'Male', 'Oslo', 'Croatia', 'Backend Developer') " + \
-                "ON CONFLICT (id) DO NOTHING"
+                "VALUES (2, 'Le', 'Shekha', '2003-03-04', 'Male', 'Oslo', 'Croatia', 'Backend Developer') " + \
+                "ON CONFLICT (id) DO UPDATE SET first_name = EXCLUDED.first_name, gender = EXCLUDED.gender;"
+                #"ON CONFLICT (id) DO NOTHING"
+                
         print ( '\n', query )
         pprint ( db.query ( query ), width=200 ) 
 
