@@ -197,9 +197,9 @@ def __count_groupby ( db, tablename, field ) -> None:
 
 
 #count + group by + having + order by
-def __count_groupby_having ( db, tablename, field ) -> None:
+def __count_groupby_having ( db, tablename, field, amount ) -> None:
 
-        query = f"SELECT {field}, COUNT(*) FROM {tablename} GROUP BY {field} HAVING COUNT(*) > 8 ORDER BY COUNT(*);"
+        query = f"SELECT {field}, COUNT(*) FROM {tablename} GROUP BY {field} HAVING COUNT(*) > {amount} ORDER BY COUNT(*);"
         print ( '\n', query )
         pprint ( db.query ( query, selection=True ), width=200 )
 
@@ -213,9 +213,9 @@ def __as ( db, tablename, fields ) -> None:
 
 
 #coalesce + order by
-def __coalesce ( db, tablename, field ) -> None:
+def __coalesce ( db, tablename, field, msg ) -> None:
 
-        query = f"SELECT COALESCE({field}, 'not applicable') FROM employee ORDER BY email;"
+        query = f"SELECT COALESCE({field}, {msg}) FROM employee ORDER BY email;"
         print ( '\n', query )
         pprint ( db.query ( query, selection=True ), width=200 ) 
 
@@ -265,41 +265,41 @@ def queries ( db ):
 
         tablename = 'employee'
 
-        try:                                                                                    #TODO: add notes
-                __drop_table ( db, tablename )                                                  #drop table if exists
-                __create_table ( db, tablename )                                                #create table from data (SQL)
-                __drop_table ( db, tablename )                                                  #drop table if exists
-                __create_table_csv ( db, tablename )                                            #create table from data (CSV->SQL)
-                __delete_row ( db, tablename, id='500' )                                        #delete row
-                __remove_primary_key ( db, tablename )                                          #remove primary key
-                __add_primary_key ( db, tablename, field='id' )                                 #add primary key
+        try:
+                __drop_table ( db, tablename )                                                  #DROP TABLE IF EXISTS
+                __create_table ( db, tablename )                                                #CREATE TABLE FROM data (SQL)
+                __drop_table ( db, tablename )                                                  #DROP TABLE IF EXISTS
+                __create_table_csv ( db, tablename )                                            #CREATE TABLE FROM data (CSV->SQL)
+                __delete_row ( db, tablename, id='500' )                                        #DELETE row
+                __remove_primary_key ( db, tablename )                                          #ALTER TABLE - remove PRIMARY KEY
+                __add_primary_key ( db, tablename, field='id' )                                 #ADD PRIMARY KEY
                 __print_table ( db, tablename )                                                 #print table
                 __print_columns ( db, tablename )                                               #print table column names
                 __column ( db, tablename, column='email' )                                      #print one column
                 __columns ( db, tablename, columns=['first_name', 'last_name', 'title'] )       #print several columns
-                __orderby ( db, tablename, orderby='city', sort='DESC' )                        #print table order by {field} (ASC/DESC)
-                __distinct ( db, tablename, column='country', sort='ASC' )                      #distinct rows in column
-                __where_and ( db, tablename, columns=['gender', 'country'] )                    #where + and
-                __conditions ( db, tablename, columns=['gender', 'country', 'first_name'] )     #where + conditions + order by
-                __limit ( db, tablename, limit=12 )                                             #limit
-                __offset ( db, tablename, offset=200, limit=5 )                                 #offset + limit
-                __fetch ( db, tablename, offset=300, fetch=10 )                                 #offset + fetch
-                __where_in ( db, tablename, field='country' )                                   #where + in
-                __where_between ( db, tablename, field='date_of_birth' )                        #where + between
-                __where_like ( db, tablename, field='email' )                                   #where + like
-                __count_groupby ( db, tablename, field='country' )                              #count + group by
-                __count_groupby_having ( db, tablename, field='country' )                       #count + group by + having + order by
-                __as ( db, tablename, fields=['first_name', 'last_name', 'gender'] )            #as
-                __coalesce ( db, tablename, field='email' )                                     #coalesce + order by
-                __age_now_as ( db, tablename, field='date_of_birth' )                           #age + now + as | note: age of employees
+                __orderby ( db, tablename, orderby='city', sort='DESC' )                        #print table ORDER BY {field} (ASC/DESC)
+                __distinct ( db, tablename, column='country', sort='ASC' )                      #DISTINCT rows in column
+                __where_and ( db, tablename, columns=['gender', 'country'] )                    #WHERE + AND
+                __conditions ( db, tablename, columns=['gender', 'country', 'first_name'] )     #WHERE + conditions + ORDER BY
+                __limit ( db, tablename, limit=12 )                                             #LIMIT | note: print only {limit} rows
+                __offset ( db, tablename, offset=200, limit=5 )                                 #OFFSET + LIMIT | note: print only {limit} rows starting from {offset}
+                __fetch ( db, tablename, offset=300, fetch=10 )                                 #OFFSET + FETCH | note: print only {limit} rows starting from {offset}
+                __where_in ( db, tablename, field='country' )                                   #WHERE + IN | note: employees from a particular country
+                __where_between ( db, tablename, field='date_of_birth' )                        #WHERE + BETWEEN | note: employees born on a certain date
+                __where_like ( db, tablename, field='email' )                                   #WHERE + LIKE | note: employees with specific {field} format
+                __count_groupby ( db, tablename, field='country' )                              #COUNT + GROUP BY | note: amount of employees from counties
+                __count_groupby_having ( db, tablename, field='country', amount=8 )             #COUNT + GROUP BY + HAVING + ORDER BY | note: amount of employees(>{amount}) from counties
+                __as ( db, tablename, fields=['first_name', 'last_name', 'gender'] )            #AS | note: change headers
+                __coalesce ( db, tablename, field='email', msg='not applicable' )               #COALESCE + ORDER BY | note: replace null by {msg}
+                __age_now_as ( db, tablename, field='date_of_birth' )                           #AGE + NOW + AS | note: age of employees
                 tablename = 'holiday'
-                __drop_table ( db, tablename )                                                  #drop table if exists
-                __create_table ( db, tablename )                                                #create table from data (SQL)
-                __print_table ( db, tablename )                                                 #create table from data (SQL)
-                __min_max ( db, tablename, field='price', operation='max' )                     #min, max
-                __round_avg ( db, tablename, field='price' )                                    #round + average
-                __min_groupby ( db, tablename, fields=['destination_country', 'price'] )        #min + group by | note: most cheap tickets in countries
-                __sum_groupby ( db, tablename, fields=['destination_country', 'price'] )        #sum + group by | note: amount of tickets to countries
+                __drop_table ( db, tablename )                                                  #DROP TABLE IF EXISTS
+                __create_table ( db, tablename )                                                #CREATE TABLE FROM data (SQL)
+                __print_table ( db, tablename )                                                 #print table
+                __min_max ( db, tablename, field='price', operation='max' )                     #MIN, MAX | note: MIN/MAX price of tickets
+                __round_avg ( db, tablename, field='price' )                                    #ROUND + AVERAGE | note: round {field}
+                __min_groupby ( db, tablename, fields=['destination_country', 'price'] )        #MIN + GROUP BY | note: most cheap tickets in countries
+                __sum_groupby ( db, tablename, fields=['destination_country', 'price'] )        #SUM + GROUP BY | note: amount of tickets to countries
 
         except ( Exception, psycopg2.DatabaseError ) as error:
                 exit ( error )
