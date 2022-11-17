@@ -6,21 +6,21 @@ import psycopg2
 from pprint import pprint
 
 
-#drop table
+#DROP TABLE IF EXISTS
 def __drop_table ( db, tablename ) -> None:
 
         query = f"DROP TABLE IF EXISTS {tablename};"
         db.query ( query )
 
 
-#create table from data (SQL)
+#CREATE TABLE FROM data (SQL)
 def __create_table ( db, tablename ) -> None:
 
         query = open ( f'./data/{tablename}.sql', 'r' ).read()
         db.query ( query )
 
 
-#create table from data (CSV->SQL)
+#CREATE TABLE FROM data (CSV->SQL)
 def __create_table_csv ( db, tablename ) -> None:
 
         head = f"CREATE TABLE {tablename} ( " + \
@@ -53,7 +53,7 @@ def __create_table_csv ( db, tablename ) -> None:
         db.query ( query )
 
 
-#delete row
+#DELETE row
 def __delete_row ( db, tablename, id ) -> None:
 
         query = f"DELETE FROM {tablename} WHERE id={id};"
@@ -61,7 +61,7 @@ def __delete_row ( db, tablename, id ) -> None:
         db.query ( query )
 
 
-#remove primary key
+#ALTER TABLE - remove PRIMARY KEY
 def __remove_primary_key ( db, tablename ) -> None:
 
         query = f"ALTER TABLE {tablename} DROP CONSTRAINT {tablename}_pkey;"
@@ -69,10 +69,18 @@ def __remove_primary_key ( db, tablename ) -> None:
         db.query ( query )
 
 
-#add primary key
+#ADD PRIMARY KEY
 def __add_primary_key ( db, tablename, field ) -> None:
 
         query = f"ALTER TABLE {tablename} ADD PRIMARY KEY({field});"
+        print ( '\n', query )
+        db.query ( query )
+
+
+#ALTER TABLE - ADD unique field
+def __unique_field ( db, tablename, field ) -> None:
+
+        query = f"ALTER TABLE {tablename} ADD CONSTRAINT unique_{field} UNIQUE({field});"
         print ( '\n', query )
         db.query ( query )
 
@@ -92,6 +100,7 @@ def __print_columns ( db, tablename ) -> None:
         print ( '\n', query )
         pprint ( db.query ( query, selection=True ), width=200 )
 
+
 #print one column
 def __column ( db, tablename, column ) -> None:
 
@@ -108,7 +117,7 @@ def __columns ( db, tablename, columns ) -> None:
         pprint ( db.query ( query, selection=True ), width=200 )
 
 
-#print table order by {field} (ASC/DESC)
+#print table ORDER BY {field} (ASC/DESC)
 def __orderby ( db, tablename, orderby, sort ) -> None:
 
         query = f"SELECT * FROM {tablename} ORDER BY {orderby} {sort};"
@@ -116,7 +125,7 @@ def __orderby ( db, tablename, orderby, sort ) -> None:
         pprint ( db.query ( query, selection=True ), width=200 )
 
 
-#distinct rows in column
+#DISTINCT rows in column
 def __distinct ( db, tablename, column, sort ) -> None:
 
         query = f"SELECT DISTINCT {column} FROM {tablename} ORDER BY {column} {sort};"
@@ -124,7 +133,7 @@ def __distinct ( db, tablename, column, sort ) -> None:
         pprint ( db.query ( query, selection=True ), width=200 )
 
 
-#where + and
+#WHERE + AND
 def __where_and ( db, tablename, columns ) -> None:
 
         query = f"SELECT * FROM {tablename} WHERE {columns [ 0 ]}='Female' AND {columns [ 1 ]}='Brazil';"
@@ -132,7 +141,7 @@ def __where_and ( db, tablename, columns ) -> None:
         pprint ( db.query ( query, selection=True ), width=200 )
 
 
-#where + conditions + order by
+#WHERE + conditions + ORDER BY
 def __conditions ( db, tablename, columns ) -> None:
 
         query = f"SELECT * FROM {tablename} WHERE {columns [ 0 ]}='Female' AND ({columns [ 1 ]}='Poland' OR {columns [ 1 ]}='Germany') ORDER BY {columns [ 2 ]};"
@@ -140,7 +149,7 @@ def __conditions ( db, tablename, columns ) -> None:
         pprint ( db.query ( query, selection=True ), width=200 )
 
 
-#limit
+#LIMIT | note: print only {limit} rows
 def __limit ( db, tablename, limit ) -> None:
 
         query = f"SELECT * FROM {tablename} LIMIT {limit};"
@@ -148,7 +157,7 @@ def __limit ( db, tablename, limit ) -> None:
         pprint ( db.query ( query, selection=True ), width=200 )
 
 
-#offset + limit
+#OFFSET + LIMIT | note: print only {limit} rows starting from {offset}
 def __offset ( db, tablename, offset, limit ) -> None:
 
         query = f"SELECT * FROM {tablename} OFFSET {offset} LIMIT {limit};"
@@ -156,7 +165,7 @@ def __offset ( db, tablename, offset, limit ) -> None:
         pprint ( db.query ( query, selection=True ), width=200 )
 
 
-#fetch + limit
+#OFFSET + FETCH | note: print only {limit} rows starting from {offset}
 def __fetch ( db, tablename, offset, fetch ) -> None:
 
         query = f"SELECT * FROM {tablename} OFFSET {offset} FETCH FIRST {fetch} ROW ONLY;"
@@ -164,7 +173,7 @@ def __fetch ( db, tablename, offset, fetch ) -> None:
         pprint ( db.query ( query, selection=True ), width=200 )
 
 
-#where + in
+#WHERE + IN | note: employees from a particular country
 def __where_in ( db, tablename, field ) -> None:
 
         query = f"SELECT * FROM {tablename} WHERE {field} IN ('Canada', 'Peru', 'Israel');"
@@ -172,7 +181,7 @@ def __where_in ( db, tablename, field ) -> None:
         pprint ( db.query ( query, selection=True ), width=200 )
 
 
-#where + between
+#WHERE + BETWEEN | note: employees born on a certain date
 def __where_between ( db, tablename, field ) -> None:
 
         query = f"SELECT * FROM {tablename} WHERE {field} BETWEEN '1990-01-01' AND '1992-01-01';"
@@ -180,7 +189,7 @@ def __where_between ( db, tablename, field ) -> None:
         pprint ( db.query ( query, selection=True ), width=200 )
 
 
-#where + like
+#WHERE + LIKE | note: employees with specific {field} format
 def __where_like ( db, tablename, field ) -> None:
 
         query = f"SELECT * FROM {tablename} WHERE {field} LIKE '%@google.%';"
@@ -188,7 +197,7 @@ def __where_like ( db, tablename, field ) -> None:
         pprint ( db.query ( query, selection=True ), width=200 )
 
 
-#count + group by
+#COUNT + GROUP BY | note: amount of employees from counties
 def __count_groupby ( db, tablename, field ) -> None:
 
         query = f"SELECT {field}, COUNT(*) FROM {tablename} GROUP BY {field};"
@@ -196,7 +205,7 @@ def __count_groupby ( db, tablename, field ) -> None:
         pprint ( db.query ( query, selection=True ), width=200 )
 
 
-#count + group by + having + order by
+#COUNT + GROUP BY + HAVING + ORDER BY | note: amount of employees(>{amount}) from counties
 def __count_groupby_having ( db, tablename, field, amount ) -> None:
 
         query = f"SELECT {field}, COUNT(*) FROM {tablename} GROUP BY {field} HAVING COUNT(*) > {amount} ORDER BY COUNT(*);"
@@ -204,7 +213,7 @@ def __count_groupby_having ( db, tablename, field, amount ) -> None:
         pprint ( db.query ( query, selection=True ), width=200 )
 
 
-#as
+#AS | note: change headers
 def __as ( db, tablename, fields ) -> None:
 
         query = f"SELECT id, {fields [ 0 ]} AS name, {fields [ 1 ]} AS surname, country, {fields [ 2 ]} AS sex FROM employee;"
@@ -212,15 +221,15 @@ def __as ( db, tablename, fields ) -> None:
         pprint ( db.query ( query, selection=True ), width=200 )  
 
 
-#coalesce + order by
+#COALESCE + ORDER BY | note: replace null by {msg}
 def __coalesce ( db, tablename, field, msg ) -> None:
 
-        query = f"SELECT COALESCE({field}, {msg}) FROM employee ORDER BY email;"
+        query = f"SELECT COALESCE({field}, '{msg}') FROM employee ORDER BY email;"
         print ( '\n', query )
         pprint ( db.query ( query, selection=True ), width=200 ) 
 
 
-#age + now + as | note: age of employees
+#AGE + NOW + AS | note: age of employees
 def __age_now_as ( db, tablename, field ) -> None:
 
         query = f"SELECT first_name, last_name, title, AGE(NOW(), {field}) AS age FROM {tablename};"
@@ -228,7 +237,7 @@ def __age_now_as ( db, tablename, field ) -> None:
         pprint ( db.query ( query, selection=True ), width=200 ) 
 
 
-#min, max
+#MIN, MAX | note: MIN/MAX price of tickets
 def __min_max ( db, tablename, field, operation ) -> None:
 
         query = f"SELECT {operation}({field}) FROM {tablename};"
@@ -236,7 +245,7 @@ def __min_max ( db, tablename, field, operation ) -> None:
         pprint ( db.query ( query, selection=True ), width=200 ) 
 
 
-#round + average
+#ROUND + AVERAGE | note: round {field}
 def __round_avg ( db, tablename, field ) -> None:
 
         query = f"SELECT ROUND(AVG({field})) FROM {tablename};"
@@ -244,7 +253,7 @@ def __round_avg ( db, tablename, field ) -> None:
         pprint ( db.query ( query, selection=True ), width=200 ) 
 
 
-#min + group by | note: most cheap tickets in countries
+#MIN + GROUP BY | note: most cheap tickets in countries
 def __min_groupby ( db, tablename, fields ) -> None:
 
         query = f"SELECT {fields [ 0 ]}, MIN({fields [ 1 ]}) FROM {tablename} GROUP BY {fields [ 0 ]};"
@@ -252,7 +261,7 @@ def __min_groupby ( db, tablename, fields ) -> None:
         pprint ( db.query ( query, selection=True ), width=200 ) 
 
 
-#sum + group by | note: amount of tickets to countries
+#SUM + GROUP BY | note: amount of tickets to countries
 def __sum_groupby ( db, tablename, fields ) -> None:
 
         query = f"SELECT {fields [ 0 ]}, SUM({fields [ 1 ]}) FROM {tablename} GROUP BY {fields [ 0 ]};"
@@ -273,6 +282,7 @@ def queries ( db ):
                 __delete_row ( db, tablename, id='500' )                                        #DELETE row
                 __remove_primary_key ( db, tablename )                                          #ALTER TABLE - remove PRIMARY KEY
                 __add_primary_key ( db, tablename, field='id' )                                 #ADD PRIMARY KEY
+                __unique_field ( db, tablename, field='email' )                                 #ALTER TABLE - ADD unique field
                 __print_table ( db, tablename )                                                 #print table
                 __print_columns ( db, tablename )                                               #print table column names
                 __column ( db, tablename, column='email' )                                      #print one column
