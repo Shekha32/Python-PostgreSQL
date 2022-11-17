@@ -196,6 +196,14 @@ def __coalesce ( db, tablename, field ) -> None:
         pprint ( db.query ( query, selection=True ), width=200 ) 
 
 
+#age + now + as | note: age of employees
+def __age_now_as ( db, tablename, field ) -> None:
+
+        query = f"SELECT first_name, last_name, title, AGE(NOW(), {field}) AS age FROM {tablename};"
+        print ( '\n', query )
+        pprint ( db.query ( query, selection=True ), width=200 ) 
+
+
 #min, max
 def __min_max ( db, tablename, field, operation ) -> None:
 
@@ -256,6 +264,7 @@ def queries ( db ):
                 __count_groupby_having ( db, tablename, field='country' )                       #count + group by + having + order by
                 __as ( db, tablename, fields=['first_name', 'last_name', 'gender'] )            #as
                 __coalesce ( db, tablename, field='email' )                                     #coalesce + order by
+                __age_now_as ( db, tablename, field='date_of_birth' )                           #age + now + as | note: age of employees
                 tablename = 'holiday'
                 __drop_table ( db, tablename )                                                  #drop table if exists
                 __create_table ( db, tablename )                                                #create table from data (SQL)
