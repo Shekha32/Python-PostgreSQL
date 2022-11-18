@@ -345,7 +345,6 @@ def queries ( db ):
                 __round_avg ( db, tablename, field='price' )                                    #ROUND + AVERAGE | note: round {field}
                 __min_groupby ( db, tablename, fields=['destination_country', 'price'] )        #MIN + GROUP BY | note: most cheap tickets in countries
                 __sum_groupby ( db, tablename, fields=['destination_country', 'price'] )        #SUM + GROUP BY | note: amount of tickets to countries
-                #TODO: add cars.sql to data. constraint: car make
 
         except ( Exception, psycopg2.DatabaseError ) as error:
                 exit ( error )
