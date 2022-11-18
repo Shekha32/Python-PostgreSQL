@@ -69,6 +69,14 @@ def __update_set ( db, tablename, id ) -> None:
         pprint ( db.query ( query ), width=200 ) 
 
 
+#ALTER TABLE - ADD CONSTRAINT + CHECK | note: gender constraint
+def __add_constaint_check ( db, tablename, field ) -> None:
+
+        query = f"ALTER TABLE {tablename} ADD CONSTRAINT {field}_constraint CHECK (gender = 'Male' OR gender = 'Female');"
+        print ( '\n', query )
+        pprint ( db.query ( query ), width=200 )
+
+
 #INSERT row + CONFLICT handling
 def __conflict ( db, tablename ) -> None:
 
@@ -295,16 +303,19 @@ def queries ( db ):
         tablename = 'employee'
 
         try:
+                #creation and settings
                 __drop_table ( db, tablename )                                                  #DROP TABLE IF EXISTS
                 __create_table ( db, tablename )                                                #CREATE TABLE FROM data (SQL)
                 __drop_table ( db, tablename )                                                  #DROP TABLE IF EXISTS
                 __create_table_csv ( db, tablename )                                            #CREATE TABLE FROM data (CSV->SQL)
                 __delete_row ( db, tablename, id='500' )                                        #DELETE row
                 __update_set ( db, tablename, id=1 )                                            #UPDATE + SET + WHERE | note: update {id} row
+                __add_constaint_check ( db, tablename, field='gender' )                         #ALTER TABLE - ADD CONSTRAINT + CHECK | note: gender constraint
                 __conflict ( db, tablename )                                                    #INSERT row + CONFLICT handling
                 __remove_primary_key ( db, tablename )                                          #ALTER TABLE - remove PRIMARY KEY
                 __add_primary_key ( db, tablename, field='id' )                                 #ADD PRIMARY KEY
                 __unique_field ( db, tablename, field='email' )                                 #ALTER TABLE - ADD unique field
+                #selection
                 __print_table ( db, tablename )                                                 #print table
                 __print_columns ( db, tablename )                                               #print table column names
                 __column ( db, tablename, column='email' )                                      #print one column
@@ -325,8 +336,10 @@ def queries ( db ):
                 __coalesce ( db, tablename, field='email', msg='not applicable' )               #COALESCE + ORDER BY | note: replace null by {msg}
                 __age_now_as ( db, tablename, field='date_of_birth' )                           #AGE + NOW + AS | note: age of employees
                 tablename = 'holiday'
+                #creation and settings
                 __drop_table ( db, tablename )                                                  #DROP TABLE IF EXISTS
                 __create_table ( db, tablename )                                                #CREATE TABLE FROM data (SQL)
+                #selection
                 __print_table ( db, tablename )                                                 #print table
                 __min_max ( db, tablename, field='price', operation='max' )                     #MIN, MAX | note: MIN/MAX price of tickets
                 __round_avg ( db, tablename, field='price' )                                    #ROUND + AVERAGE | note: round {field}

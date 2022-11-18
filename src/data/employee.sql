@@ -3,7 +3,7 @@ CREATE TABLE employee (
 	first_name VARCHAR(50) NOT NULL,
 	last_name VARCHAR(50) NOT NULL,
 	date_of_birth DATE NOT NULL,
-	gender VARCHAR(30) NOT NULL,
+	gender VARCHAR(6) NOT NULL,
 	city VARCHAR(40) NOT NULL,
 	country VARCHAR(40) NOT NULL,
 	title VARCHAR(50) NOT NULL,
