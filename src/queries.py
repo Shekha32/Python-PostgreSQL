@@ -313,6 +313,14 @@ def __add_references ( db, tables, field ) -> None:
         pprint ( db.query ( query ), width=200 ) 
 
 
+#UPDATE + SET | note: add car_id to employee
+def __update_set_car ( db, table, field, id ) -> None:
+
+        query = f"UPDATE {table} SET {field} = {id [ 0 ]} WHERE id = {id [ 1 ]};"       #TODO: add condition on email field
+        print ( '\n', query )
+        pprint ( db.query ( query ), width=200 )
+
+
 #various queries
 def queries ( db ):
 
@@ -369,6 +377,7 @@ def queries ( db ):
                 __unique_key ( db, table='employee', field='car_id' )                       #ALTER TABLE - ADD unique field | note: foreign key from car(id) is unique field
                 #selection
                 __print_table ( db, table )                                                 #print table
+                __update_set_car ( db, table='employee', field='car_id', id=[93, 490] )     #UPDATE + SET | note: add car_id to employee
 
         except ( Exception, psycopg2.DatabaseError ) as error:
                 exit ( error )
