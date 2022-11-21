@@ -338,6 +338,14 @@ def __inner_join2 ( db, tables, fields ) -> None:
         pprint ( db.query ( query, selection=True ), width=200 )
 
 
+#LEFT JOIN | note: employees + cars
+def __left_join ( db, tables, field ) -> None:
+
+        query = f"SELECT * FROM {tables [ 0 ]} LEFT JOIN {tables [ 1 ]} ON {tables [ 1 ]}.id = {tables [ 0 ]}.{field};"
+        print ( '\n', query )
+        pprint ( db.query ( query, selection=True ), width=400 )
+
+
 #various queries
 def queries ( db ):
 
@@ -392,11 +400,12 @@ def queries ( db ):
                 __create_table ( db, table )                                                    #CREATE TABLE FROM data (SQL)
                 __add_references ( db, tables, field='id' )                                     #ALTER TABLE - ADD REFERENCES | note: add foreign key from car(id) to employee
                 __unique_key ( db, table='employee', field='car_id' )                           #ALTER TABLE - ADD unique field | note: foreign key from car(id) is unique field
+                __update_set_car ( db, table='employee', field='car_id', id=[93, 490] )         #UPDATE + SET | note: add car_id to employee
                 #selection
                 __print_table ( db, table )                                                     #print table
-                __update_set_car ( db, table='employee', field='car_id', id=[93, 490] )         #UPDATE + SET | note: add car_id to employee
                 __inner_join ( db, tables, field='car_id' )                                     #INNER JOIN | note: print employees with cars
                 __inner_join2 ( db, tables, fields=['last_name', 'make', 'model'] )             #INNER JOIN | note: print different fields
+                __left_join ( db, tables, field='car_id' )                                      #LEFT JOIN | note: employees + cars
 
         except ( Exception, psycopg2.DatabaseError ) as error:
                 exit ( error )
