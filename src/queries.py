@@ -105,10 +105,18 @@ def __add_primary_key ( db, table, field ) -> None:
         db.query ( query )
 
 
-#ALTER TABLE - ADD unique field
+#ALTER TABLE - ADD CONSTRAINT unique field
 def __unique_field ( db, table, field ) -> None:
 
         query = f"ALTER TABLE {table} ADD CONSTRAINT unique_{field} UNIQUE({field});"
+        print ( '\n', query )
+        db.query ( query )
+
+
+#ALTER TABLE - ADD unique field
+def __unique_key ( db, table, field ) -> None:
+
+        query = f"ALTER TABLE {table} ADD UNIQUE({field});"
         print ( '\n', query )
         db.query ( query )
 
@@ -322,7 +330,7 @@ def queries ( db ):
                 __conflict ( db, table )                                                    #INSERT row + CONFLICT handling
                 __remove_primary_key ( db, table )                                          #ALTER TABLE - remove PRIMARY KEY
                 __add_primary_key ( db, table, field='id' )                                 #ADD PRIMARY KEY
-                __unique_field ( db, table, field='email' )                                 #ALTER TABLE - ADD unique field
+                __unique_field ( db, table, field='email' )                                 #ALTER TABLE - ADD CONSTRAINT unique field | note: email is unique field
                 #selection
                 __print_table ( db, table )                                                 #print table
                 __print_columns ( db, table )                                               #print table column names
@@ -358,6 +366,7 @@ def queries ( db ):
                 __drop_table ( db, table )                                                  #DROP TABLE IF EXISTS
                 __create_table ( db, table )                                                #CREATE TABLE FROM data (SQL)
                 __add_references ( db, tables=['employee', 'car'], field='id' )             #ALTER TABLE - ADD REFERENCES | note: add foreign key from car(id) to employee
+                __unique_key ( db, table='employee', field='car_id' )                       #ALTER TABLE - ADD unique field | note: foreign key from car(id) is unique field
                 #selection
                 __print_table ( db, table )                                                 #print table
 
