@@ -13,7 +13,7 @@ import queries
 class Database():
 
         #constructor
-        def __init__( self ) -> None:
+        def __init__ ( self ) -> None:
                 pass
 
 
@@ -43,29 +43,34 @@ class Database():
         #execution of query to the database
         def query ( self, query, selection=False ):
 
-                #print ( 'query: ', query )
-
                 self.cursor.execute ( query )
 
                 if selection:
                         return self.cursor.fetchall()
 
 
+        #creation of csv files (export SQL tables to CSV)
+        def create_csv ( self, query, file ):
+
+                self.cursor.copy_expert ( query, file )
+
+
 #main
 def __main() -> None:
 
-        qs = Database()         #class object creation
+        qs = Database()                         #class object creation
 
         try:
-                qs.dbconn()     #database connection
+                qs.dbconn()                     #database connection
 
         except ( Exception, psycopg2.DatabaseError ) as error:
                 exit ( error )
 
         else:
-                queries.queries ( qs )
-        
-        print ( '\n\nENDMAIN: All queries have been successfully executed!' )
+                queries.queries ( qs )          #execution of various queries to the database (PostgreSQL)
+                queries.create_csv ( qs )       #creation of csv files (export SQL tables to CSV)
+
+        print ( '\n\nENDMAIN: All queries successfully executed!' )
 
 
 if __name__ == '__main__':

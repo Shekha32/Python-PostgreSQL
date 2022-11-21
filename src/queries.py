@@ -344,7 +344,7 @@ def __left_join ( db, tables, field, condition ) -> None:
         query = f"SELECT * FROM {tables [ 0 ]} LEFT JOIN {tables [ 1 ]} ON {tables [ 1 ]}.id = {tables [ 0 ]}.{field}"
         query += f" WHERE {field} IS NOT NULL;" if condition else ";"
         print ( '\n', query )
-        pprint ( db.query ( query, selection=True ), width=400 )
+        pprint ( db.query ( query, selection=True ), width=200 )
 
 
 #RIGHT JOIN | note: employees + cars
@@ -352,7 +352,7 @@ def __right_join ( db, tables, field ) -> None:
 
         query = f"SELECT * FROM {tables [ 0 ]} RIGHT JOIN {tables [ 1 ]} ON {tables [ 1 ]}.id = {tables [ 0 ]}.{field}"
         print ( '\n', query )
-        pprint ( db.query ( query, selection=True ), width=400 )
+        pprint ( db.query ( query, selection=True ), width=200 )
 
 
 #FULL OUTER JOIN | note: employees + cars
@@ -360,11 +360,11 @@ def __full_outer_join ( db, tables, field ) -> None:
 
         query = f"SELECT * FROM {tables [ 0 ]} FULL OUTER JOIN {tables [ 1 ]} ON {tables [ 1 ]}.id = {tables [ 0 ]}.{field}"
         print ( '\n', query )
-        pprint ( db.query ( query, selection=True ), width=400 )
+        pprint ( db.query ( query, selection=True ), width=200 )
 
 
 #various queries
-def queries ( db ):
+def queries ( db ) -> None:
 
         table = 'employee'
 
@@ -428,3 +428,15 @@ def queries ( db ):
 
         except ( Exception, psycopg2.DatabaseError ) as error:
                 exit ( error )
+
+
+#creation of csv files (export SQL tables to CSV)
+def create_csv ( db ) -> None:
+
+        path = './outcome/'
+        tables = [ 'employee', 'holiday', 'car' ]
+
+        for table in tables:
+                query = f"COPY (SELECT * FROM {table} ORDER BY id) TO STDOUT WITH CSV DELIMITER ',' HEADER;"
+                with open ( f"{path}{table}.csv", "w" ) as f:
+                        db.create_csv ( query, f )
