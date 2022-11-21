@@ -339,9 +339,10 @@ def __inner_join2 ( db, tables, fields ) -> None:
 
 
 #LEFT JOIN | note: employees + cars
-def __left_join ( db, tables, field ) -> None:
+def __left_join ( db, tables, field, condition ) -> None:
 
-        query = f"SELECT * FROM {tables [ 0 ]} LEFT JOIN {tables [ 1 ]} ON {tables [ 1 ]}.id = {tables [ 0 ]}.{field};"
+        query = f"SELECT * FROM {tables [ 0 ]} LEFT JOIN {tables [ 1 ]} ON {tables [ 1 ]}.id = {tables [ 0 ]}.{field}"
+        query += f" WHERE {field} IS NOT NULL;" if condition else ";"
         print ( '\n', query )
         pprint ( db.query ( query, selection=True ), width=400 )
 
@@ -405,7 +406,7 @@ def queries ( db ):
                 __print_table ( db, table )                                                     #print table
                 __inner_join ( db, tables, field='car_id' )                                     #INNER JOIN | note: print employees with cars
                 __inner_join2 ( db, tables, fields=['last_name', 'make', 'model'] )             #INNER JOIN | note: print different fields
-                __left_join ( db, tables, field='car_id' )                                      #LEFT JOIN | note: employees + cars
+                __left_join ( db, tables, field='car_id', condition=True )                      #LEFT JOIN | note: employees + cars
 
         except ( Exception, psycopg2.DatabaseError ) as error:
                 exit ( error )
