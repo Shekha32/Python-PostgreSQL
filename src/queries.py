@@ -83,7 +83,7 @@ def __conflict ( db, table ) -> None:
         query = f"INSERT INTO {table} (id, first_name, last_name, date_of_birth, gender, city, country, title) " + \
                 "VALUES (2, 'Le', 'Shekha', '2003-03-04', 'Male', 'Oslo', 'Croatia', 'Backend Developer') " + \
                 "ON CONFLICT (id) DO UPDATE SET first_name = EXCLUDED.first_name, gender = EXCLUDED.gender;"
-                #"ON CONFLICT (id) DO NOTHING"
+                #"ON CONFLICT (id) DO NOTHING;"
                 
         print ( '\n', query )
         pprint ( db.query ( query ), width=200 ) 
@@ -316,7 +316,7 @@ def __add_references ( db, tables, field ) -> None:
 #UPDATE + SET | note: add car_id to employee
 def __update_set_car ( db, table, field, id ) -> None:
 
-        query = f"UPDATE {table} SET {field} = {id [ 0 ]} WHERE id = {id [ 1 ]};"       #TODO: add condition on email field
+        query = f"UPDATE {table} SET {field} = {id [ 0 ]} WHERE id = {id [ 1 ]} AND {table}.email IS NOT NULL;"
         print ( '\n', query )
         pprint ( db.query ( query ), width=200 )
 
@@ -338,7 +338,6 @@ def __inner_join2 ( db, tables, fields ) -> None:
         pprint ( db.query ( query, selection=True ), width=200 )
 
 
-
 #various queries
 def queries ( db ):
 
@@ -346,58 +345,58 @@ def queries ( db ):
 
         try:
                 #creation and settings
-                __drop_table ( db, table )                                                              #DROP TABLE IF EXISTS
-                __create_table ( db, table )                                                            #CREATE TABLE FROM data (SQL)
-                __drop_table ( db, table )                                                              #DROP TABLE IF EXISTS
-                __create_table_csv ( db, table )                                                        #CREATE TABLE FROM data (CSV->SQL)
-                __delete_row ( db, table, id='500' )                                                    #DELETE row
-                __update_set ( db, table, id=1 )                                                        #UPDATE + SET + WHERE | note: update {id} row
-                __add_constaint_check ( db, table, field='gender' )                                     #ALTER TABLE - ADD CONSTRAINT + CHECK | note: gender constraint
-                __conflict ( db, table )                                                                #INSERT row + CONFLICT handling
-                __remove_primary_key ( db, table )                                                      #ALTER TABLE - remove PRIMARY KEY
-                __add_primary_key ( db, table, field='id' )                                             #ADD PRIMARY KEY
-                __unique_field ( db, table, field='email' )                                             #ALTER TABLE - ADD CONSTRAINT unique field | note: email is unique field
+                __drop_table ( db, table )                                                      #DROP TABLE IF EXISTS
+                __create_table ( db, table )                                                    #CREATE TABLE FROM data (SQL)
+                __drop_table ( db, table )                                                      #DROP TABLE IF EXISTS
+                __create_table_csv ( db, table )                                                #CREATE TABLE FROM data (CSV->SQL)
+                __delete_row ( db, table, id='500' )                                            #DELETE row
+                __update_set ( db, table, id=1 )                                                #UPDATE + SET + WHERE | note: update {id} row
+                __add_constaint_check ( db, table, field='gender' )                             #ALTER TABLE - ADD CONSTRAINT + CHECK | note: gender constraint
+                __conflict ( db, table )                                                        #INSERT row + CONFLICT handling
+                __remove_primary_key ( db, table )                                              #ALTER TABLE - remove PRIMARY KEY
+                __add_primary_key ( db, table, field='id' )                                     #ADD PRIMARY KEY
+                __unique_field ( db, table, field='email' )                                     #ALTER TABLE - ADD CONSTRAINT unique field | note: email is unique field
                 #selection
-                __print_table ( db, table )                                                             #print table
-                __print_columns ( db, table )                                                           #print table column names
-                __column ( db, table, column='email' )                                                  #print one column
-                __columns ( db, table, columns=['first_name', 'last_name', 'title'] )                   #print several columns
-                __orderby ( db, table, orderby='city', sort='DESC' )                                    #print table ORDER BY {field} (ASC/DESC)
-                __distinct ( db, table, column='country', sort='ASC' )                                  #DISTINCT rows in column
-                __where_and ( db, table, columns=['gender', 'country'] )                                #WHERE + AND
-                __conditions ( db, table, columns=['gender', 'country', 'first_name'] )                 #WHERE + conditions + ORDER BY
-                __limit ( db, table, limit=12 )                                                         #LIMIT | note: print only {limit} rows
-                __offset ( db, table, offset=200, limit=5 )                                             #OFFSET + LIMIT | note: print only {limit} rows starting from {offset}
-                __fetch ( db, table, offset=300, fetch=10 )                                             #OFFSET + FETCH | note: print only {limit} rows starting from {offset}
-                __where_in ( db, table, field='country' )                                               #WHERE + IN | note: employees from a particular country
-                __where_between ( db, table, field='date_of_birth' )                                    #WHERE + BETWEEN | note: employees born on a certain date
-                __where_like ( db, table, field='email' )                                               #WHERE + LIKE | note: employees with specific {field} format
-                __count_groupby ( db, table, field='country' )                                          #COUNT + GROUP BY | note: amount of employees from counties
-                __count_groupby_having ( db, table, field='country', amount=8 )                         #COUNT + GROUP BY + HAVING + ORDER BY | note: amount of employees(>{amount}) from counties
-                __as ( db, table, fields=['first_name', 'last_name', 'gender'] )                        #AS | note: change headers
-                __coalesce ( db, table, field='email', msg='not applicable' )                           #COALESCE + ORDER BY | note: replace null by {msg}
-                __age_now_as ( db, table, field='date_of_birth' )                                       #AGE + NOW + AS | note: age of employees
+                __print_table ( db, table )                                                     #print table
+                __print_columns ( db, table )                                                   #print table column names
+                __column ( db, table, column='email' )                                          #print one column
+                __columns ( db, table, columns=['first_name', 'last_name', 'title'] )           #print several columns
+                __orderby ( db, table, orderby='city', sort='DESC' )                            #print table ORDER BY {field} (ASC/DESC)
+                __distinct ( db, table, column='country', sort='ASC' )                          #DISTINCT rows in column
+                __where_and ( db, table, columns=['gender', 'country'] )                        #WHERE + AND
+                __conditions ( db, table, columns=['gender', 'country', 'first_name'] )         #WHERE + conditions + ORDER BY
+                __limit ( db, table, limit=12 )                                                 #LIMIT | note: print only {limit} rows
+                __offset ( db, table, offset=200, limit=5 )                                     #OFFSET + LIMIT | note: print only {limit} rows starting from {offset}
+                __fetch ( db, table, offset=300, fetch=10 )                                     #OFFSET + FETCH | note: print only {limit} rows starting from {offset}
+                __where_in ( db, table, field='country' )                                       #WHERE + IN | note: employees from a particular country
+                __where_between ( db, table, field='date_of_birth' )                            #WHERE + BETWEEN | note: employees born on a certain date
+                __where_like ( db, table, field='email' )                                       #WHERE + LIKE | note: employees with specific {field} format
+                __count_groupby ( db, table, field='country' )                                  #COUNT + GROUP BY | note: amount of employees from counties
+                __count_groupby_having ( db, table, field='country', amount=8 )                 #COUNT + GROUP BY + HAVING + ORDER BY | note: amount of employees(>{amount}) from counties
+                __as ( db, table, fields=['first_name', 'last_name', 'gender'] )                #AS | note: change headers
+                __coalesce ( db, table, field='email', msg='not applicable' )                   #COALESCE + ORDER BY | note: replace null by {msg}
+                __age_now_as ( db, table, field='date_of_birth' )                               #AGE + NOW + AS | note: age of employees
+                #creation and settings
                 table = 'holiday'
-                #creation and settings
-                __drop_table ( db, table )                                                              #DROP TABLE IF EXISTS
-                __create_table ( db, table )                                                            #CREATE TABLE FROM data (SQL)
+                __drop_table ( db, table )                                                      #DROP TABLE IF EXISTS
+                __create_table ( db, table )                                                    #CREATE TABLE FROM data (SQL)
                 #selection
-                __print_table ( db, table )                                                             #print table
-                __min_max ( db, table, field='price', operation='max' )                                 #MIN, MAX | note: MIN/MAX price of tickets
-                __round_avg ( db, table, field='price' )                                                #ROUND + AVERAGE | note: round {field}
-                __min_groupby ( db, table, fields=['destination_country', 'price'] )                    #MIN + GROUP BY | note: most cheap tickets in countries
-                __sum_groupby ( db, table, fields=['destination_country', 'price'] )                    #SUM + GROUP BY | note: amount of tickets to countries
-                table = 'car'
+                __print_table ( db, table )                                                     #print table
+                __min_max ( db, table, field='price', operation='max' )                         #MIN, MAX | note: MIN/MAX price of tickets
+                __round_avg ( db, table, field='price' )                                        #ROUND + AVERAGE | note: round {field}
+                __min_groupby ( db, table, fields=['destination_country', 'price'] )            #MIN + GROUP BY | note: most cheap tickets in countries
+                __sum_groupby ( db, table, fields=['destination_country', 'price'] )            #SUM + GROUP BY | note: amount of tickets to countries
                 #creation and settings
-                __drop_table ( db, table )                                                              #DROP TABLE IF EXISTS
-                __create_table ( db, table )                                                            #CREATE TABLE FROM data (SQL)
-                __add_references ( db, tables=['employee', 'car'], field='id' )                         #ALTER TABLE - ADD REFERENCES | note: add foreign key from car(id) to employee
-                __unique_key ( db, table='employee', field='car_id' )                                   #ALTER TABLE - ADD unique field | note: foreign key from car(id) is unique field
+                table, tables = 'car', [ 'employee', 'car' ]
+                __drop_table ( db, table )                                                      #DROP TABLE IF EXISTS
+                __create_table ( db, table )                                                    #CREATE TABLE FROM data (SQL)
+                __add_references ( db, tables, field='id' )                                     #ALTER TABLE - ADD REFERENCES | note: add foreign key from car(id) to employee
+                __unique_key ( db, table='employee', field='car_id' )                           #ALTER TABLE - ADD unique field | note: foreign key from car(id) is unique field
                 #selection
-                __print_table ( db, table )                                                             #print table
-                __update_set_car ( db, table='employee', field='car_id', id=[93, 490] )                 #UPDATE + SET | note: add car_id to employee
-                __inner_join ( db, tables=['employee', 'car'], field='car_id' )                         #INNER JOIN | note: print employees with cars
-                __inner_join2 ( db, tables=['employee', 'car'], fields=['last_name', 'make', 'model'] ) #INNER JOIN | note: print different fields
+                __print_table ( db, table )                                                     #print table
+                __update_set_car ( db, table='employee', field='car_id', id=[93, 490] )         #UPDATE + SET | note: add car_id to employee
+                __inner_join ( db, tables, field='car_id' )                                     #INNER JOIN | note: print employees with cars
+                __inner_join2 ( db, tables, fields=['last_name', 'make', 'model'] )             #INNER JOIN | note: print different fields
 
         except ( Exception, psycopg2.DatabaseError ) as error:
                 exit ( error )
