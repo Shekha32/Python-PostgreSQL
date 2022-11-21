@@ -347,6 +347,14 @@ def __left_join ( db, tables, field, condition ) -> None:
         pprint ( db.query ( query, selection=True ), width=400 )
 
 
+#RIGHT JOIN | note: employees + cars
+def __right_join ( db, tables, field ) -> None:
+
+        query = f"SELECT * FROM {tables [ 0 ]} RIGHT JOIN {tables [ 1 ]} ON {tables [ 1 ]}.id = {tables [ 0 ]}.{field}"
+        print ( '\n', query )
+        pprint ( db.query ( query, selection=True ), width=400 )
+
+
 #various queries
 def queries ( db ):
 
@@ -407,6 +415,7 @@ def queries ( db ):
                 __inner_join ( db, tables, field='car_id' )                                     #INNER JOIN | note: print employees with cars
                 __inner_join2 ( db, tables, fields=['last_name', 'make', 'model'] )             #INNER JOIN | note: print different fields
                 __left_join ( db, tables, field='car_id', condition=True )                      #LEFT JOIN | note: employees + cars
+                __right_join ( db, tables, field='car_id' )                                     #RIGHT JOIN | note: employees + cars
 
         except ( Exception, psycopg2.DatabaseError ) as error:
                 exit ( error )
