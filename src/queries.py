@@ -321,6 +321,14 @@ def __update_set_car ( db, table, field, id ) -> None:
         pprint ( db.query ( query ), width=200 )
 
 
+#INNER JOIN | note: print employees with cars
+def __inner_join ( db, tables, field ) -> None:
+
+        query = f"SELECT * from {tables [ 0 ]} JOIN {tables [ 1 ]} ON {tables [ 0 ]}.{field} = car.id;"
+        print ( '\n', query )
+        pprint ( db.query ( query, selection=True ), width=200 )
+
+
 #various queries
 def queries ( db ):
 
@@ -378,6 +386,7 @@ def queries ( db ):
                 #selection
                 __print_table ( db, table )                                                 #print table
                 __update_set_car ( db, table='employee', field='car_id', id=[93, 490] )     #UPDATE + SET | note: add car_id to employee
+                __inner_join ( db, tables=['employee', 'car'], field='car_id' )             #INNER JOIN | note: print employees with cars
 
         except ( Exception, psycopg2.DatabaseError ) as error:
                 exit ( error )
